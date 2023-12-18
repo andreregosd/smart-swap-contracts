@@ -11,10 +11,9 @@ describe("SmartSwapPool", function () {
   let zeroAddress = '0x0000000000000000000000000000000000000000';
   beforeEach(async () => {
     [deployer, user] = await ethers.getSigners();
-    let t1ContractFactory = await ethers.getContractFactory("TestToken1");
-    token1 = await t1ContractFactory.deploy();
-    let t2ContractFactory = await ethers.getContractFactory("TestToken2");
-    token2 = await t2ContractFactory.deploy();
+    let tokenContractFactory = await ethers.getContractFactory("TestToken");
+    token1 = await tokenContractFactory.deploy("TestToken1", "TT1");
+    token2 = await tokenContractFactory.deploy("TestToken2", "TT2");
 
     let contractFactory = await ethers.getContractFactory("SmartSwapPool");
     smartSwapPool = await contractFactory.deploy(token1.address, token2.address);
