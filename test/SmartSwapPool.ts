@@ -36,7 +36,7 @@ describe("SmartSwapPool", function () {
       await transactionResponse.wait(1);
 
       await expect(smartSwapPool.init(parseEther("100"), parseEther("100"))).to.be.revertedWith(
-        "SmartSwapPool__AlreadyHasLiquidity"
+        "SmartSwapPool__PoolAlreadyInitialized"
       );
     });
     it("Adds liquidity", async function () {
@@ -81,15 +81,27 @@ describe("SmartSwapPool", function () {
       });
     });
 
-    describe("Get price", function() {
+    describe("Get swap output amount", function() {
       it("Should revert if input amount is 0", async function () {
-        await expect(smartSwapPool.price(true, 0)).to.be.revertedWith(
+        await expect(smartSwapPool.getSwapOutput(true, 0)).to.be.revertedWith(
           "SmartSwapPool__InvalidInputAmount"
         );
       });
-      it("Should get the correct price", async function () {
-        let outputAmount = await smartSwapPool.price(true, parseEther("10"));
+      it("Should get the correct amount", async function () {
+        let outputAmount = await smartSwapPool.getSwapOutput(true, parseEther("10"));
         expect(outputAmount).to.equal(parseEther("9.066108938801491315"));
+      });
+    });
+
+    describe("Get swap input amount", function() {
+      it("Should revert if output amount is 0", async function () {
+        await expect(smartSwapPool.getSwapInput(true, 0)).to.be.revertedWith(
+          "SmartSwapPool__InvalidOutputAmount"
+        );
+      });
+      it("Should get the correct amount", async function () {
+        let outputAmount = await smartSwapPool.getSwapInput(true, parseEther("9.066108938801491315"));
+        expect(outputAmount).to.equal(parseEther("10"));
       });
     });
 

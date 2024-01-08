@@ -16,6 +16,10 @@ contract SmartSwapFactory {
     constructor(){
     }
 
+    function getLiquidityPoolsLength() public view returns (uint256) {
+        return allLiquidityPools.length;
+    }
+
     function createPool(address tokenA, address tokenB) external returns (address) {
         if(tokenA == tokenB)
             revert SmartSwapFactory__NeedTwoDifferentTokens();
@@ -27,6 +31,7 @@ contract SmartSwapFactory {
             revert SmartSwapFactory__PoolAlreadyExists();
 
         SmartSwapPool pool = new SmartSwapPool(token0, token1);
+        allLiquidityPools.push(address(pool));
         liquidityPools[token0][token1] = address(pool);
         // populate mapping in the reverse direction to avoid the cost of comparing addresses
         liquidityPools[token1][token0] = address(pool);
